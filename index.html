@@ -68,8 +68,17 @@
         <div id="exam-view" class="hidden fade-in">
             <div id="exam-start" class="bg-white rounded-2xl shadow-xl p-8 text-center">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">📝 模拟考试</h2>
-                <p class="text-gray-600 mb-6">随机抽取 100 道题，限时 60 分钟<br>满分 100 分，60 分及格</p>
-                <button onclick="startExam()" class="px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl">开始考试</button>
+                <p class="text-gray-600 mb-4">随机抽取 40 道题（单选题 32 题 + 多选题 8 题）<br>限时 40 分钟，满分 100 分，答对 30 题（75 分）及格</p>
+                <div class="bg-blue-50 rounded-lg p-4 text-left text-sm text-gray-700">
+                    <p class="font-bold text-blue-800 mb-2">📋 A 类考试规则：</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>单选题 32 题，多选题 8 题</li>
+                        <li>答题时间 40 分钟</li>
+                        <li>答对 30 题（≥75 分）为合格</li>
+                        <li>需熟悉无线电管理规定，具备一定操作技术能力</li>
+                    </ul>
+                </div>
+                <button onclick="startExam()" class="mt-6 px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl">开始考试</button>
             </div>
 
             <div id="exam-taking" class="hidden">
@@ -77,8 +86,8 @@
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-bold text-indigo-600">第 <span id="exam-question-num">1</span> 题</span>
                         <div class="flex items-center space-x-4">
-                            <span class="text-sm text-gray-500">已答：<span id="exam-answered">0</span>/100</span>
-                            <span id="exam-timer" class="text-lg font-mono font-bold text-red-600">60:00</span>
+                            <span class="text-sm text-gray-500">已答：<span id="exam-answered">0</span>/40</span>
+                            <span id="exam-timer" class="text-lg font-mono font-bold text-red-600">40:00</span>
                         </div>
                     </div>
                 </div>
@@ -820,7 +829,7 @@
         let examQuestions = [];
         let examAnswers = {};
         let examTimer = null;
-        let examTimeRemaining = 3600;
+        let examTimeRemaining = 2400; // 40 分钟 = 2400 秒
         let isWrongPractice = false;
 
         // ==================== 标签切换 ====================
@@ -957,11 +966,22 @@
 
         // ==================== 模拟考试 ====================
         function startExam() {
-            // 随机抽取 100 题（如果题目不够则全部使用）
-            const shuffled = [...questionsData].sort(() => Math.random() - 0.5);
-            examQuestions = shuffled.slice(0, Math.min(100, questionsData.length));
+            // A 类考试：40 题（32 单选 +8 多选）
+            const singleChoice = questionsData.filter(q => !q.answer.includes(','));
+            const multipleChoice = questionsData.filter(q => q.answer.includes(','));
+            
+            // 随机打乱
+            const shuffledSingle = singleChoice.sort(() => Math.random() - 0.5);
+            const shuffledMultiple = multipleChoice.sort(() => Math.random() - 0.5);
+            
+            // 抽取 32 单选 + 8 多选
+            examQuestions = [
+                ...shuffledSingle.slice(0, 32),
+                ...shuffledMultiple.slice(0, 8)
+            ].sort(() => Math.random() - 0.5); // 再次打乱顺序
+            
             examAnswers = {};
-            examTimeRemaining = 3600;
+            examTimeRemaining = 2400; // 40 分钟
 
             document.getElementById('exam-start').classList.add('hidden');
             document.getElementById('exam-taking').classList.remove('hidden');
@@ -991,17 +1011,25 @@
             document.getElementById('exam-question-text').textContent = q.content;
             document.getElementById('exam-answered').textContent = Object.keys(examAnswers).length;
 
+            // 判断是否为多选题
+            const isMultiple = q.answer.includes(',');
+            const questionTextEl = document.getElementById('exam-question-text');
+            if (isMultiple && !questionTextEl.innerHTML.includes('【多选题】')) {
+                questionTextEl.innerHTML = '<span class="inline-block px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold ml-2">【多选题】</span>' + q.content;
+            }
+
             const optionsContainer = document.getElementById('exam-options');
             optionsContainer.innerHTML = '';
             q.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 const letter = String.fromCharCode(65 + i);
-                const isSelected = examAnswers[index] === letter;
+                const userAnswers = examAnswers[index] ? examAnswers[index].split(',').map(a => a.trim()) : [];
+                const isSelected = userAnswers.includes(letter);
                 btn.className = `option-btn w-full p-4 text-left rounded-xl border-2 transition-all ${
                     isSelected ? 'border-indigo-600 bg-indigo-100' : 'border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
                 }`;
                 btn.innerHTML = `<span class="font-medium">${opt}</span>`;
-                btn.onclick = () => selectExamOption(index, letter);
+                btn.onclick = () => selectExamOption(index, letter, isMultiple);
                 optionsContainer.appendChild(btn);
             });
         }
@@ -1010,8 +1038,24 @@
             loadExamQuestion(index);
         }
 
-        function selectExamOption(questionIndex, answer) {
-            examAnswers[questionIndex] = answer;
+        function selectExamOption(questionIndex, answer, isMultiple) {
+            const currentAnswers = examAnswers[questionIndex] ? examAnswers[questionIndex].split(',').map(a => a.trim()) : [];
+            
+            if (isMultiple) {
+                // 多选题：切换选择状态
+                const idx = currentAnswers.indexOf(answer);
+                if (idx > -1) {
+                    currentAnswers.splice(idx, 1); // 取消选择
+                } else {
+                    currentAnswers.push(answer); // 添加选择
+                }
+                currentAnswers.sort();
+                examAnswers[questionIndex] = currentAnswers.join(',');
+            } else {
+                // 单选题：直接设置
+                examAnswers[questionIndex] = answer;
+            }
+            
             loadExamQuestion(questionIndex);
             document.getElementById('exam-answered').textContent = Object.keys(examAnswers).length;
         }
@@ -1038,9 +1082,16 @@
 
             examQuestions.forEach((q, index) => {
                 const userAnswer = examAnswers[index];
-                const correctIndex = q.answer.charCodeAt(0) - 65;
+                const correctAnswers = q.answer.split(',').map(a => a.trim()).sort();
+                
+                // 判断是否正确（支持多选）
+                let isCorrect = false;
+                if (userAnswer) {
+                    const userAnswers = userAnswer.split(',').map(a => a.trim()).sort();
+                    isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+                }
 
-                if (userAnswer === q.answer) {
+                if (isCorrect) {
                     score++;
                 } else if (userAnswer) {
                     // 答错的题目加入错题本
@@ -1062,14 +1113,12 @@
 
             const percentage = (score / examQuestions.length) * 100;
             let resultText = '';
-            if (percentage >= 90) {
-                resultText = '🏆 优秀！基础知识非常扎实！';
-            } else if (percentage >= 80) {
-                resultText = '👍 良好！继续保持！';
+            if (score >= 30) {
+                resultText = '🎉 恭喜合格！可以继续备考 B 类！';
             } else if (percentage >= 60) {
-                resultText = '✅ 及格！还需加强练习！';
+                resultText = '📚 接近合格，还需加强练习！';
             } else {
-                resultText = '📚 不及格，建议多做练习题！';
+                resultText = '💪 继续加油，建议多做刷题练习！';
             }
             document.getElementById('exam-result-text').textContent = resultText;
         }
