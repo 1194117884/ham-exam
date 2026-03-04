@@ -24,6 +24,14 @@ const Exam: React.FC = () => {
     }[];
   } | null>(null);
   const [showDetailedResults, setShowDetailedResults] = useState(false);
+  const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({});
+
+  const toggleQuestionDetail = (index: number) => {
+    setExpandedQuestions(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   // 考试时长（分钟）根据类别设定
   const getExamDuration = (): number => {
@@ -110,52 +118,8 @@ const Exam: React.FC = () => {
       );
     }
 
-    // 对每个问题的选项进行洗牌
-    const shuffledQuestions = examQuestions.map((question) => {
-      // 创建 [原始索引, 选项文本] 的数组对
-      const indexedOptions = question.options.map(
-        (opt: string, index: number) => [index, opt],
-      );
-
-      // 使用 Fisher-Yates 洗牌算法
-      for (let i = indexedOptions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [indexedOptions[i], indexedOptions[j]] = [
-          indexedOptions[j],
-          indexedOptions[i],
-        ];
-      }
-
-      // 生成新的正确答案
-      const newAnswer = [];
-      // 处理原始答案：如果是字符串则将其转换为字符数组
-      const originalAnswerArray =
-        typeof question.answer === "string"
-          ? question.answer.split("")
-          : question.answer;
-
-      const originalAnswerIndices = originalAnswerArray.map((ans: string) =>
-        question.options.findIndex((opt: string) => opt.charAt(0) === ans),
-      );
-
-      for (let i = 0; i < indexedOptions.length; i++) {
-        const originalIndex = indexedOptions[i][0] as number;
-        if (originalAnswerIndices.includes(originalIndex)) {
-          // 获取洗牌后该位置对应的新字母
-          const newLetter = String.fromCharCode(65 + i); // A=65, B=66, etc.
-          newAnswer.push(newLetter);
-        }
-      }
-
-      // 返回包含洗牌后选项和新答案的对象
-      return {
-        ...question,
-        shuffledOptions: indexedOptions,
-        answer: newAnswer, // 使用新的答案字母
-      };
-    });
-
-    setQuestions(shuffledQuestions);
+    // 不再对选项进行洗牌，直接使用原始选项
+    setQuestions(examQuestions);
     setAnswers({});
     setTimeLeft(getExamDuration() * 60); // 转换为秒
     setIsExamActive(true);
@@ -193,36 +157,39 @@ const Exam: React.FC = () => {
         return rawAns.charAt(0);
       });
 
-      const correctAnswer = question.answer; // 洗牌后的答案字母
+      // 直接使用原始选项和答案，无需处理洗牌逻辑
+      const correctAnswer = question.answer;
 
       // 检查用户答案是否与正确答案完全匹配（包括完全正确和完全错误的情况）
       // 多选题必须精确匹配所有正确选项才算正确，漏选、多选或错选都是错误
+      // 为了准确比较，我们先对两个数组进行排序再比较
+      const sortedUserAnswers = [...userAnswerLetters].sort();
+      const sortedCorrectAnswers = [...(typeof correctAnswer === 'string' ? correctAnswer.split('') : correctAnswer)].sort();
       const isFullyCorrect =
-        userAnswerLetters.length === correctAnswer.length &&
-        userAnswerLetters.every((ans: string) => correctAnswer.includes(ans)) &&
-        correctAnswer.every((ans: string) => userAnswerLetters.includes(ans));
+        sortedUserAnswers.length === sortedCorrectAnswers.length &&
+        sortedUserAnswers.every((ans, index) => ans === sortedCorrectAnswers[index]);
 
       // 添加判题详情
       details.push({
         questionId: question.id,
         userAnswer: userAnswerLetters,
         userAnswerTexts: userAnswerLetters.map((ans: string) => {
-          // 找到字母对应的选项索引 (A=0, B=1, C=2, D=3...)
+          // 找到字母对应的原始选项
           const optIndex = ans.charCodeAt(0) - 65; // A=65, B=66, etc.
-          return optIndex >= 0 && optIndex < question.shuffledOptions.length
-            ? question.shuffledOptions[optIndex][1] // 取出洗牌后的选项文本
+          return optIndex >= 0 && optIndex < (question.options?.length || 0)
+            ? question.options[optIndex] // 取出原始选项文本
             : ans;
         }),
         correctAnswer: correctAnswer,
-        correctAnswerTexts: correctAnswer.map((ans: string) => {
-          // 找到字母对应的选项索引 (A=0, B=1, C=2, D=3...)
+        correctAnswerTexts: (typeof correctAnswer === 'string' ? correctAnswer.split('') : correctAnswer).map((ans: string) => {
+          // 找到字母对应的原始选项
           const optIndex = ans.charCodeAt(0) - 65; // A=65, B=66, etc.
-          return optIndex >= 0 && optIndex < question.shuffledOptions.length
-            ? question.shuffledOptions[optIndex][1] // 取出洗牌后的选项文本
+          return optIndex >= 0 && optIndex < (question.options?.length || 0)
+            ? question.options[optIndex] // 取出原始选项文本
             : ans;
         }),
         isCorrect: isFullyCorrect,
-        content: question.content
+        content: question.content,
       });
 
       if (isFullyCorrect) {
@@ -248,7 +215,7 @@ const Exam: React.FC = () => {
     setExamResults({
       score: correctCount,
       total: totalQuestions,
-      details: details
+      details: details,
     });
   };
 
@@ -262,11 +229,13 @@ const Exam: React.FC = () => {
     setAnswers((prev) => {
       const currentSelection = prev[questionId] || [];
 
-      if (
+      // 根据题目答案长度判断是否为多选题
+      const isMultiChoice =
         typeof question.answer === "string"
           ? question.answer.length > 1
-          : question.answer.length > 1
-      ) {
+          : question.answer.length > 1;
+
+      if (isMultiChoice) {
         // 多选题
         return {
           ...prev,
@@ -331,24 +300,6 @@ const Exam: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <div className="flex flex-col items-center gap-4 mb-6">
-        {isExamActive && !examSubmitted && (
-          <div className="flex items-center space-x-4">
-            <div
-              className={`text-lg font-mono ${timeLeft < 300 ? "text-red-600" : "text-gray-700"}`}
-            >
-              剩余时间: {formatTime(timeLeft)}
-            </div>
-            <button
-              onClick={submitExam}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              提交试卷
-            </button>
-          </div>
-        )}
-      </div>
-
       {!isExamActive && !examSubmitted ? (
         <div className="text-center py-12">
           <div className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
@@ -405,7 +356,7 @@ const Exam: React.FC = () => {
             // 显示考试结果
             <div className="text-center py-12">
               <div className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto">
-                <h3 className="text-2xl font-bold mb-4">考试结束</h3>
+                <h3 className="text-2xl font-bold mb-4">分数</h3>
 
                 <div className="mb-6">
                   <div
@@ -414,7 +365,7 @@ const Exam: React.FC = () => {
                     {examResults.score}/{examResults.total}
                   </div>
                   <div className="text-gray-600">
-                    得分:{" "}
+                    准确度:{" "}
                     {Math.round((examResults.score / examResults.total) * 100)}%
                   </div>
                 </div>
@@ -422,10 +373,10 @@ const Exam: React.FC = () => {
                 <div className="mb-6 p-4 rounded-lg bg-gray-50 text-left">
                   <h4 className="font-medium mb-2">考试详情：</h4>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 考试类别：{currentClass}类</li>
-                    <li>• 题目总数：{examResults.total}题</li>
-                    <li>• 答对题目：{examResults.score}题</li>
-                    <li>• 合格标准：{getPassingScore()}题</li>
+                    <li>• 证别：{currentClass}类</li>
+                    <li>• 总考题：{examResults.total}题</li>
+                    <li>• 达标标准：{getPassingScore()}题</li>
+                    <li>• 答对：{examResults.score}题</li>
                     <li>
                       • 考试结果：
                       <span
@@ -447,15 +398,16 @@ const Exam: React.FC = () => {
                   onClick={() => setShowDetailedResults(true)}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium mr-2"
                 >
-                  查看详情
+                  详情
                 </button>
 
                 <button
                   onClick={startExam}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium mr-2"
                 >
-                  再考一次
+                  重考
                 </button>
+
                 <button
                   onClick={() => {
                     setIsExamActive(false);
@@ -463,7 +415,7 @@ const Exam: React.FC = () => {
                   }}
                   className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium"
                 >
-                  返回首页
+                  返回
                 </button>
               </div>
 
@@ -474,43 +426,78 @@ const Exam: React.FC = () => {
                 title="详细答题结果"
               >
                 <div className="space-y-4">
-                  {examResults.details.map((detail, index) => (
-                    <div
-                      key={detail.questionId}
-                      className={`p-4 rounded-lg border ${detail.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
-                    >
-                      <div className="flex items-start">
-                        <div className={`mr-3 mt-1 text-lg ${detail.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-                          {detail.isCorrect ? '✓' : '✗'}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium">
-                            第 {index + 1} 题: {detail.content}
-                          </h4>
-                          <div className="mt-2 text-sm">
-                            <div>
-                              <span className="font-medium">你的答案:</span>
-                              {detail.userAnswer.length > 0
-                                ? detail.userAnswerTexts.map((text, idx) => (
-                                    <span key={idx} className="ml-2 px-2 py-1 bg-blue-100 rounded">
-                                      {detail.userAnswer[idx]}: {text.substring(3)} {/* 移除字母前缀 */}
-                                    </span>
-                                  ))
-                                : '未作答'}
-                            </div>
-                            <div>
-                              <span className="font-medium">正确答案:</span>
-                              {detail.correctAnswerTexts.map((text, idx) => (
-                                <span key={idx} className="ml-2 px-2 py-1 bg-green-100 rounded">
-                                  {detail.correctAnswer[idx]}: {text.substring(3)} {/* 移除字母前缀 */}
+                  {examResults.details.map((detail, index) => {
+                    const isExpanded = expandedQuestions[index] ?? false;
+                    const isCorrect = detail.isCorrect;
+
+                    return (
+                      <div
+                        key={detail.questionId}
+                        className={`p-4 rounded-lg border ${detail.isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}
+                      >
+                        <div
+                          className="cursor-pointer"
+                          onClick={() => isCorrect && toggleQuestionDetail(index)}
+                        >
+                          <div className="flex flex-col justify-center items-start">
+                            <h4 className="font-medium text-start">
+                              {isCorrect ? (
+                                <span>
+                                  {isExpanded ? '▼ ' : '► '}第 {index + 1} 题
                                 </span>
-                              ))}
-                            </div>
+                              ) : (
+                                <span>第 {index + 1} 题: {detail.content}</span>
+                              )}
+                            </h4>
+
+                            {/* 只有在错误或者正确题目的展开状态下才显示详细信息 */}
+                            {(isCorrect && isExpanded) || !isCorrect ? (
+                              <div className="mt-2 text-sm text-start">
+                                {/* 当题目正确且处于展开状态时显示题目内容 */}
+                                {isCorrect && isExpanded && (
+                                  <div className="mb-2">
+                                    {detail.content}
+                                  </div>
+                                )}
+
+                                <div>
+                                  <span className="font-medium">正确答案:</span>
+                                  {detail.correctAnswerTexts.map((text, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="ml-2 px-2 py-1 bg-green-100 rounded"
+                                    >
+                                      {detail.correctAnswer[idx]}: {text.substring(3)}{" "}
+                                      {/* 移除字母前缀 */}
+                                    </span>
+                                  ))}
+                                </div>
+
+                                <div>
+                                  <span className="font-medium">你的答案:</span>
+                                  {detail.userAnswer.length > 0 ? (
+                                    detail.userAnswerTexts.map((text, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="ml-2 px-2 py-1 bg-blue-100 rounded"
+                                      >
+                                        {detail.userAnswer[idx]}: {text.substring(3)}{" "}
+                                        {/* 移除字母前缀 */}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <span className="ml-2 px-2 py-1 bg-py-100 rounded">
+                                      未作答
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Modal>
             </div>
@@ -527,9 +514,7 @@ const Exam: React.FC = () => {
                       <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded mr-2">
                         {question.topic}
                       </span>
-                      <span className="text-gray-500 text-sm">
-                        第 {index + 1} 题
-                      </span>
+                      <span className="text-gray-500 text-sm">{index + 1}</span>
                     </div>
                     <span className="text-sm text-gray-500">
                       {(
@@ -547,8 +532,8 @@ const Exam: React.FC = () => {
                   </h3>
 
                   <div className="space-y-2">
-                    {question.shuffledOptions.map(
-                      ([_, option]: [number, string], optIndex: number) => {
+                    {question.options.map(
+                      (option: string, optIndex: number) => {
                         const isSelected = isOptionSelected(
                           question.id,
                           option,
@@ -579,11 +564,23 @@ const Exam: React.FC = () => {
                 </div>
               ))}
 
-              <div className="fixed bottom-4 right-4 bg-white p-3 rounded-lg shadow-lg">
-                <div className="text-sm">
-                  已答: {Object.keys(answers).length} / {questions.length}
+              {/* 固定的底部控制栏，包含答题进度和提交按钮 */}
+              {isExamActive && !examSubmitted && (
+                <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white p-3 rounded-lg shadow-lg border flex items-center gap-3 z-10 min-w-max">
+                  <div className="text-xs font-mono whitespace-nowrap">
+                    {formatTime(timeLeft)}
+                  </div>
+                  <div className="text-xs whitespace-nowrap">
+                    {Object.keys(answers).length}/{questions.length}
+                  </div>
+                  <button
+                    onClick={submitExam}
+                    className="px-3 py-1.5 bg-red-600 text-white rounded text-xs whitespace-nowrap"
+                  >
+                    交卷
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>

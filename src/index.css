@@ -2,3 +2,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 移动端优化样式 */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+
+  /* 防止字体在移动设备上缩放 */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* 优化触摸目标大小 */
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 优化表单输入在移动设备上的显示 */
+  input, textarea, select {
+    font-size: 16px; /* 防止iOS缩放到输入框 */
+  }
+
+  /* 底部安全区域适配 */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* 导航栏适配 */
+  .navbar-mobile {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+}
+
+/* 滚动条样式优化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* PWA全屏模式下的适配 */
+@media screen and (display-mode: standalone) {
+  body {
+    overscroll-behavior: none;
+  }
+}
+
+/* 防止长按出现上下文菜单 */
+.noselect {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

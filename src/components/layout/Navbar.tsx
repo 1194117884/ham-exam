@@ -82,8 +82,8 @@ const Navbar: React.FC = () => {
             >
               错题本
               {Object.keys(wrongAnswers).length > 0 && (
-                <span className="absolute -top-1 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {Object.keys(wrongAnswers).length}
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
+                  {Object.keys(wrongAnswers).length > 99 ? '99+' : Object.keys(wrongAnswers).length}
                 </span>
               )}
             </Link>
@@ -159,8 +159,8 @@ const Navbar: React.FC = () => {
           >
             错题本
             {Object.keys(wrongAnswers).length > 0 && (
-              <span className="absolute top-2 right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {Object.keys(wrongAnswers).length}
+              <span className="absolute top-2 right-3 bg-red-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
+                {Object.keys(wrongAnswers).length > 99 ? '99+' : Object.keys(wrongAnswers).length}
               </span>
             )}
           </Link>

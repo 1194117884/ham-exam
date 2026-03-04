@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+Disallow: /dist/
+
+# Sitemap
+Sitemap: https://your-domain.com/sitemap.xml
+
+# Crawl-delay for slower bots
+Crawl-delay: 5
+
+# Specific bot directives
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Host directive
+Host: https://your-domain.com
