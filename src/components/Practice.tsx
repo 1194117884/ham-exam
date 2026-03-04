@@ -1,0 +1,431 @@
+// src/components/Practice.tsx
+import React, { useState, useEffect } from "react";
+import { useHamExam } from "../contexts/HamExamContext";
+
+const Practice: React.FC = () => {
+  const { currentClass, getQuestionsByClass, addWrongAnswer, updateProgress, progress, practiceSettings } = useHamExam();
+
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const [inputQuestionNumber, setInputQuestionNumber] = useState<string>("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  // Initialize with all questions in sequential order
+  useEffect(() => {
+    const allQuestions = getQuestionsByClass(currentClass);
+
+    setQuestions(allQuestions);
+
+    setSelectedOptions([]);
+    setShowResult(false);
+    setScore(0);
+    setAnsweredCount(0);
+
+    // Load saved progress from context if rememberProgress is enabled
+    if (practiceSettings.rememberProgress) {
+      const progressKey = `${currentClass}_practice`;
+      const savedIndex = progress[progressKey] || 0;
+      setCurrentQuestionIndex(savedIndex);
+      setInputQuestionNumber((savedIndex + 1).toString());
+    } else {
+      setCurrentQuestionIndex(0);
+      setInputQuestionNumber("1");
+    }
+  }, [currentClass, practiceSettings.rememberProgress, progress]);
+
+  // Sync input field with current question index
+  useEffect(() => {
+    if (!isInputFocused) {
+      setInputQuestionNumber((currentQuestionIndex + 1).toString());
+    }
+  }, [currentQuestionIndex, isInputFocused]);
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  // Use original options without shuffling
+  const originalQuestionData = {
+    options:
+      currentQuestion?.options?.map((opt: string, index: number) => [
+        index,
+        opt,
+      ]) || [],
+    answer: Array.isArray(currentQuestion?.answer)
+      ? currentQuestion.answer
+      : typeof currentQuestion?.answer === "string"
+        ? currentQuestion.answer.split("")
+        : [],
+  };
+
+  if (!currentQuestion || !originalQuestionData) {
+    return (
+      <div className="max-w-3xl mx-auto p-4">
+        <div className="text-2xl font-bold text-center mb-6">
+          正在准备练习题目...
+        </div>
+        <div className="text-center py-8 bg-white rounded-lg shadow-md">
+          <p className="text-gray-600">
+            {questions.length === 0 ? "暂无符合条件的题目" : "正在加载题目..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const { options: originalOptions, answer: originalAnswer } =
+    originalQuestionData;
+
+  const handleOptionChange = (option: string) => {
+    if (showResult) return;
+
+    if (
+      typeof currentQuestion.answer === "string"
+        ? currentQuestion.answer.length > 1
+        : currentQuestion.answer.length > 1
+    ) {
+      // Multiple choice
+      setSelectedOptions((prev) =>
+        prev.includes(option)
+          ? prev.filter((opt) => opt !== option)
+          : [...prev, option],
+      );
+    } else {
+      // Single choice
+      setSelectedOptions([option]);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (selectedOptions.length === 0) return;
+
+    const selectedLetters = selectedOptions
+      .map((opt) => opt.charAt(0))
+      .sort()
+      .join("");
+    const correctAnswer = [...originalAnswer].sort().join("");
+
+    // 检查用户答案是否与正确答案完全匹配（包括完全正确和完全错误的情况）
+    // 多选题必须精确匹配所有正确选项才算正确，漏选、多选或错选都是错误
+    const isFullyCorrect = selectedLetters === correctAnswer;
+
+    // 判断是否为漏选情况（至少选中了一个正确答案，但未全选中）
+    const selectedLettersArray = selectedOptions.map(opt => opt.charAt(0));
+    const hasCorrectSelection = originalAnswer.some((ans: string) => selectedLettersArray.includes(ans)); // 至少包含一个正确选项
+    const hasMissingSelection = originalAnswer.some((ans: string) => !selectedLettersArray.includes(ans)); // 至少缺少一个正确选项
+    const isPartialCorrect = hasCorrectSelection && hasMissingSelection; // 漏选情况
+
+    if (!isFullyCorrect) {
+      addWrongAnswer({
+        questionId: currentQuestion.id,
+        selectedAnswer: selectedOptions.join(""),
+        correctAnswer: currentQuestion.answer, // Store original answer for reference
+        examClass: currentClass,
+      });
+
+      // Stay on the current question to show wrong result
+      setShowResult(true);
+      setAnsweredCount(answeredCount + 1);
+
+      // 如果是漏选，提示用户"漏选"
+      if (isPartialCorrect) {
+        setTimeout(() => {
+          alert("存在漏选，请检查您的答案！");
+        }, 100);
+      }
+    } else {
+      // Answer is correct, go to next question automatically
+      setScore(score + 1);
+      setAnsweredCount(answeredCount + 1);
+
+      if (currentQuestionIndex < questions.length - 1) {
+        // Move to next question
+        const newIndex = currentQuestionIndex + 1;
+        setCurrentQuestionIndex(newIndex);
+        // Save progress to context if rememberProgress is enabled
+        if (practiceSettings.rememberProgress) {
+          updateProgress(`${currentClass}_practice`, newIndex);
+        }
+        setSelectedOptions([]);
+        setShowResult(false);
+      } else {
+        // If it's the last question, show completion message
+        alert(`练习结束！您的得分：${score + 1}/${answeredCount + 1}`);
+        setScore(0);
+        setAnsweredCount(0);
+      }
+    }
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      const newIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(newIndex);
+      // Save progress to context if rememberProgress is enabled
+      if (practiceSettings.rememberProgress) {
+        updateProgress(`${currentClass}_practice`, newIndex);
+      }
+      setSelectedOptions([]);
+      setShowResult(false);
+    } else {
+      // If it's the last question, show completion message
+      alert(`练习结束！您的得分：${score}/${answeredCount}`);
+      setScore(0);
+      setAnsweredCount(0);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      const newIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(newIndex);
+      // Save progress to context if rememberProgress is enabled
+      if (practiceSettings.rememberProgress) {
+        updateProgress(`${currentClass}_practice`, newIndex);
+      }
+      setSelectedOptions([]);
+      setShowResult(false);
+    }
+  };
+
+  // Jump to specific question
+  const handleJumpToQuestion = () => {
+    if (!inputQuestionNumber.trim()) {
+      setInputQuestionNumber((currentQuestionIndex + 1).toString());
+      return;
+    }
+
+    const num = parseInt(inputQuestionNumber);
+    if (isNaN(num) || num < 1 || num > questions.length) {
+      alert(`请输入有效的题号 (1-${questions.length})`);
+      setInputQuestionNumber((currentQuestionIndex + 1).toString());
+      return;
+    }
+
+    const newIndex = num - 1;
+    setCurrentQuestionIndex(newIndex);
+    // Save progress to context if rememberProgress is enabled
+    if (practiceSettings.rememberProgress) {
+      updateProgress(`${currentClass}_practice`, newIndex);
+    }
+    setSelectedOptions([]);
+    setShowResult(false);
+    setIsInputFocused(false);
+  };
+
+  const handleInputBlur = () => {
+    handleJumpToQuestion();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleJumpToQuestion();
+    }
+  };
+
+  const handleInputClick = () => {
+    setIsInputFocused(true);
+    setInputQuestionNumber((currentQuestionIndex + 1).toString());
+  };
+
+  const isOptionSelected = (option: string) => {
+    return selectedOptions.includes(option);
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto p-4">
+      {/* Centered progress indicator */}
+      <div className="flex justify-center mb-6">
+        {isInputFocused ? (
+          <input
+            type="number"
+            min="1"
+            max={questions.length}
+            value={inputQuestionNumber}
+            onChange={(e) => setInputQuestionNumber(e.target.value)}
+            onBlur={handleInputBlur}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            className="bg-blue-100 text-blue-800 border border-blue-300 rounded-full px-3 py-1 w-20 text-center"
+          />
+        ) : (
+          <span
+            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full cursor-pointer"
+            onClick={handleInputClick}
+          >
+            {currentQuestionIndex + 1} / {questions.length}
+          </span>
+        )}
+      </div>
+
+      {/* Question Card */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        {/* Question header with topic, ID, and type aligned properly */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-gray-500 text-sm">
+              {currentQuestion.id.replace("[", "").replace("]", "")}
+            </span>
+            <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">
+              {currentQuestion.topic}
+            </span>
+          </div>
+
+          <span
+            className={`inline-block px-2 py-1 rounded text-xs ${
+              typeof currentQuestion.answer === "string"
+                ? currentQuestion.answer.length > 1
+                  ? "bg-purple-100 text-purple-800"
+                  : "bg-green-100 text-green-800"
+                : currentQuestion.answer.length > 1
+                  ? "bg-purple-100 text-purple-800"
+                  : "bg-green-100 text-green-800"
+            }`}
+          >
+            {typeof currentQuestion.answer === "string"
+              ? currentQuestion.answer.length > 1
+                ? "多选题"
+                : "单选题"
+              : currentQuestion.answer.length > 1
+                ? "多选题"
+                : "单选题"}
+          </span>
+        </div>
+
+        <h3 className="text-lg font-medium mb-4">{currentQuestion.content}</h3>
+
+        <div className="space-y-2 mb-6">
+          {originalOptions.map(
+            ([_, option]: [number, string], index: number) => {
+              const optionLetter = String.fromCharCode(65 + index); // A, B, C, D...
+
+              let optionClasses =
+                "block w-full text-left p-3 rounded-lg border cursor-pointer transition-colors ";
+
+              if (showResult) {
+                // Determine if this option is part of the correct answer
+                const isPartOfCorrectAnswer =
+                  originalAnswer.includes(optionLetter);
+
+                if (isOptionSelected(option)) {
+                  if (isPartOfCorrectAnswer) {
+                    optionClasses +=
+                      "bg-green-100 border-green-500 text-green-700"; // Correctly selected
+                  } else {
+                    optionClasses += "bg-red-100 border-red-500 text-red-700"; // Incorrectly selected
+                  }
+                } else if (isPartOfCorrectAnswer) {
+                  optionClasses +=
+                    "bg-green-50 border-green-300 text-green-600"; // Correct but not selected
+                } else {
+                  optionClasses += "bg-gray-50 border-gray-200 text-gray-700"; // Not selected and incorrect
+                }
+              } else {
+                if (isOptionSelected(option)) {
+                  optionClasses += "bg-blue-100 border-blue-500 text-blue-700";
+                } else {
+                  optionClasses +=
+                    "bg-gray-50 border-gray-200 hover:bg-gray-100";
+                }
+              }
+
+              return (
+                <div
+                  key={index}
+                  className={optionClasses}
+                  onClick={() => handleOptionChange(option)}
+                >
+                  <span className="font-medium">{optionLetter}.</span>{" "}
+                  {option.substring(3)} {/* Remove "A. " prefix */}
+                  {showResult && !isOptionSelected(option) && originalAnswer.includes(optionLetter) && (
+                    <span className="ml-2 text-green-600">(漏选)</span>
+                  )}
+                  {showResult && isOptionSelected(option) && !originalAnswer.includes(optionLetter) && (
+                    <span className="ml-2 text-red-600">(错误选择)</span>
+                  )}
+                </div>
+              );
+            },
+          )}
+        </div>
+
+        {!showResult ? (
+          <div className="flex justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+            >
+              上一题
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={selectedOptions.length === 0}
+              className="px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+            >
+              {typeof currentQuestion.answer === "string"
+                ? currentQuestion.answer.length > 1
+                  ? "提交答案"
+                  : "确认"
+                : currentQuestion.answer.length > 1
+                  ? "提交答案"
+                  : "确认"}
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={currentQuestionIndex >= questions.length - 1}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+            >
+              下一题
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <button
+                onClick={handlePrevious}
+                disabled={currentQuestionIndex === 0}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+              >
+                上一题
+              </button>
+              <button
+                onClick={handleNext}
+                className="px-6 py-2 bg-green-600 text-white rounded"
+              >
+                {currentQuestionIndex < questions.length - 1
+                  ? "下一题"
+                  : "完成练习"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Statistics */}
+      <div className="bg-white rounded-lg shadow-md p-4">
+        <div className="flex flex-wrap justify-between text-sm">
+          <div>
+            已答题: <span className="font-medium">{answeredCount}</span>
+          </div>
+          <div>
+            正确: <span className="font-medium text-green-600">{score}</span>
+          </div>
+          <div>
+            准确率:{" "}
+            <span className="font-medium">
+              {answeredCount > 0
+                ? Math.round((score / answeredCount) * 100)
+                : 0}
+              %
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Practice;
