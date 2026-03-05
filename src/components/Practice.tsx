@@ -72,11 +72,11 @@ const Practice: React.FC = () => {
   if (!currentQuestion || !originalQuestionData) {
     return (
       <div className="max-w-3xl mx-auto p-4">
-        <div className="text-2xl font-bold text-center mb-6">
+        <div className="text-2xl font-bold text-center mb-6 dark:text-white">
           正在准备练习题目...
         </div>
-        <div className="text-center py-8 bg-white rounded-lg shadow-md">
-          <p className="text-gray-600">
+        <div className="text-center py-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-700">
+          <p className="text-gray-600 dark:text-gray-300">
             {questions.length === 0 ? "暂无符合条件的题目" : "正在加载题目..."}
           </p>
         </div>
@@ -110,6 +110,7 @@ const Practice: React.FC = () => {
   const handleSubmit = () => {
     if (selectedOptions.length === 0) return;
 
+    // 使用当前状态值而不是依赖props，避免状态竞态问题
     const selectedLetters = selectedOptions
       .map((opt) => opt.charAt(0))
       .sort()
@@ -139,19 +140,19 @@ const Practice: React.FC = () => {
       });
 
       // Stay on the current question to show wrong result
+      // 保持在当前题目以显示错误结果，避免状态快速改变导致界面闪烁
       setShowResult(true);
-      setAnsweredCount(answeredCount + 1);
+      setAnsweredCount(prevCount => prevCount + 1);
 
       // 如果是漏选，提示用户"漏选"
       if (isPartialCorrect) {
-        setTimeout(() => {
-          alert("存在漏选，请检查您的答案！");
-        }, 100);
+        // 使用立即执行而非setTimeout，避免延迟导致的问题
+        alert("存在漏选，请检查您的答案！");
       }
     } else {
       // Answer is correct, go to next question automatically
-      setScore(score + 1);
-      setAnsweredCount(answeredCount + 1);
+      setScore(prevScore => prevScore + 1);
+      setAnsweredCount(prevCount => prevCount + 1);
 
       if (currentQuestionIndex < questions.length - 1) {
         // Move to next question
@@ -261,11 +262,11 @@ const Practice: React.FC = () => {
             onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
             autoFocus
-            className="bg-blue-100 text-blue-800 border border-blue-300 rounded-full px-3 py-1 w-20 text-center"
+            className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700 rounded-full px-3 py-1 w-20 text-center"
           />
         ) : (
           <span
-            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full cursor-pointer"
+            className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full cursor-pointer"
             onClick={handleInputClick}
           >
             {currentQuestionIndex + 1} / {questions.length}
@@ -274,25 +275,25 @@ const Practice: React.FC = () => {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-700 p-6 mb-6">
         {/* Question header with topic, ID, and type aligned properly */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-2">
-            <span className="text-gray-500 text-sm">
+            <span className="text-gray-500 dark:text-gray-400 text-sm">
               {currentQuestion.id.replace("[", "").replace("]", "")}
             </span>
-            <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">
+            <span className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs px-2 py-1 rounded">
               {currentQuestion.topic}
             </span>
             <span
               className={`inline-block px-2 py-1 rounded text-xs ${
                 typeof currentQuestion.answer === "string"
                   ? currentQuestion.answer.length > 1
-                    ? "bg-purple-100 text-purple-800"
-                    : "bg-green-100 text-green-800"
+                    ? "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+                    : "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
                   : currentQuestion.answer.length > 1
-                    ? "bg-purple-100 text-purple-800"
-                    : "bg-green-100 text-green-800"
+                    ? "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+                    : "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
               }`}
             >
               {typeof currentQuestion.answer === "string"
@@ -311,7 +312,7 @@ const Practice: React.FC = () => {
               className={`p-1 rounded transition-colors flex flex-col items-center justify-center ${
                 favorites[currentQuestion.id]
                   ? "text-yellow-500 hover:text-yellow-600"
-                  : "text-gray-400 hover:text-yellow-500"
+                  : "text-gray-400 dark:text-gray-500 hover:text-yellow-500"
               }`}
               title={favorites[currentQuestion.id] ? "取消收藏" : "收藏题目"}
             >
@@ -327,7 +328,7 @@ const Practice: React.FC = () => {
           </div>
         </div>
 
-        <h3 className="text-lg font-medium mb-4">{currentQuestion.content}</h3>
+        <h3 className="text-lg font-medium mb-4 dark:text-white">{currentQuestion.content}</h3>
 
         {/* Display attachment image if available */}
         {currentQuestion.attachment && (
@@ -335,7 +336,7 @@ const Practice: React.FC = () => {
             <img
               src={currentQuestion.attachment}
               alt="题目附件"
-              className="max-w-full h-auto rounded-lg border border-gray-300"
+              className="max-w-full h-auto rounded-lg border border-gray-300 dark:border-gray-600"
               onError={() => {
                 console.warn(`Failed to load attachment: ${currentQuestion.attachment}`);
               }}
@@ -359,22 +360,22 @@ const Practice: React.FC = () => {
                 if (isOptionSelected(option)) {
                   if (isPartOfCorrectAnswer) {
                     optionClasses +=
-                      "bg-green-100 border-green-500 text-green-700"; // Correctly selected
+                      "bg-green-100 dark:bg-green-900 border-green-500 dark:border-green-500 text-green-700 dark:text-green-200"; // Correctly selected
                   } else {
-                    optionClasses += "bg-red-100 border-red-500 text-red-700"; // Incorrectly selected
+                    optionClasses += "bg-red-100 dark:bg-red-900 border-red-500 dark:border-red-500 text-red-700 dark:text-red-200"; // Incorrectly selected
                   }
                 } else if (isPartOfCorrectAnswer) {
                   optionClasses +=
-                    "bg-green-50 border-green-300 text-green-600"; // Correct but not selected
+                    "bg-green-50 dark:bg-green-800 border-green-300 dark:border-green-600 text-green-600 dark:text-green-300"; // Correct but not selected
                 } else {
-                  optionClasses += "bg-gray-50 border-gray-200 text-gray-700"; // Not selected and incorrect
+                  optionClasses += "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300"; // Not selected and incorrect
                 }
               } else {
                 if (isOptionSelected(option)) {
-                  optionClasses += "bg-blue-100 border-blue-500 text-blue-700";
+                  optionClasses += "bg-blue-100 dark:bg-blue-900 border-blue-500 dark:border-blue-500 text-blue-700 dark:text-blue-200";
                 } else {
                   optionClasses +=
-                    "bg-gray-50 border-gray-200 hover:bg-gray-100";
+                    "bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600";
                 }
               }
 
@@ -389,12 +390,12 @@ const Practice: React.FC = () => {
                   {showResult &&
                     !isOptionSelected(option) &&
                     originalAnswer.includes(optionLetter) && (
-                      <span className="ml-2 text-green-600">(漏选)</span>
+                      <span className="ml-2 text-green-600 dark:text-green-400">(漏选)</span>
                     )}
                   {showResult &&
                     isOptionSelected(option) &&
                     !originalAnswer.includes(optionLetter) && (
-                      <span className="ml-2 text-red-600">(错误选择)</span>
+                      <span className="ml-2 text-red-600 dark:text-red-400">(错误选择)</span>
                     )}
                 </div>
               );
@@ -407,7 +408,7 @@ const Practice: React.FC = () => {
             <button
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded disabled:opacity-50"
             >
               上一题
             </button>
@@ -421,7 +422,7 @@ const Practice: React.FC = () => {
             <button
               onClick={handleNext}
               disabled={currentQuestionIndex >= questions.length - 1}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded disabled:opacity-50"
             >
               下一题
             </button>
@@ -432,7 +433,7 @@ const Practice: React.FC = () => {
               <button
                 onClick={handlePrevious}
                 disabled={currentQuestionIndex === 0}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded disabled:opacity-50"
               >
                 上一题
               </button>
@@ -450,13 +451,13 @@ const Practice: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <div className="bg-white rounded-lg shadow-md p-4">
-        <div className="flex flex-wrap justify-between text-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-700 p-4">
+        <div className="flex flex-wrap justify-between text-sm dark:text-gray-300">
           <div>
             已答题: <span className="font-medium">{answeredCount}</span>
           </div>
           <div>
-            正确: <span className="font-medium text-green-600">{score}</span>
+            正确: <span className="font-medium text-green-600 dark:text-green-400">{score}</span>
           </div>
           <div>
             准确率:{" "}

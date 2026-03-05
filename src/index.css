@@ -59,6 +59,19 @@
   background: #a8a8a8;
 }
 
+/* 深色模式滚动条样式 */
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 /* PWA全屏模式下的适配 */
 @media screen and (display-mode: standalone) {
   body {

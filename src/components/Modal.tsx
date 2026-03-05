@@ -31,36 +31,36 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* 背景遮罩 */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50"
+        className="absolute inset-0 bg-black bg-opacity-50 dark:bg-opacity-70"
         onClick={onClose}
       ></div>
 
       {/* 模态框内容 */}
       <div
-        className="relative bg-white rounded-lg shadow-xl max-w-4xl max-h-[90vh] overflow-hidden w-full"
+        className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl max-h-[90vh] overflow-hidden w-full"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 标题栏 */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold dark:text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl leading-none"
           >
             &times;
           </button>
         </div>
 
         {/* 内容区域 */}
-        <div className="overflow-y-auto max-h-[70vh] p-4">
+        <div className="overflow-y-auto max-h-[70vh] p-4 dark:text-gray-200">
           {children}
         </div>
 
         {/* 底部按钮栏 */}
-        <div className="flex justify-end p-4 border-t">
+        <div className="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             关闭
           </button>

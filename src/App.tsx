@@ -8,6 +8,7 @@ import {
   useLocation
 } from "react-router-dom";
 import { HamExamProvider } from "./contexts/HamExamContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/layout/Navbar";
 import Home from "./components/Home";
 import Practice from "./components/Practice";
@@ -112,9 +113,9 @@ const AppContent = () => {
     <>
       <SeoHead />
       <PageStructuredData />
-      <div className="min-h-screen bg-gray-50 pt-16 pb-16"> {/* 为固定导航栏和PWA安装提示留出空间 */}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-16 pb-16"> {/* 为固定导航栏和PWA安装提示留出空间 */}
         <Navbar />
-        <main className="container mx-auto py-6">
+        <main className="container mx-auto py-6 text-gray-900 dark:text-gray-100">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/practice" element={<Practice />} />
@@ -132,11 +133,13 @@ const AppContent = () => {
 
 const App: React.FC = () => {
   return (
-    <HamExamProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </HamExamProvider>
+    <ThemeProvider>
+      <HamExamProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </HamExamProvider>
+    </ThemeProvider>
   );
 };
 

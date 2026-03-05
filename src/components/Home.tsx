@@ -37,7 +37,7 @@ const Home: React.FC = () => {
     <div className="max-w-4xl mx-auto p-4">
       {/* Class Selection */}
       <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
           1.选择证书类别
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -47,34 +47,34 @@ const Home: React.FC = () => {
               onClick={() => setCurrentClass(cls.id as "A" | "B" | "C")}
               className={`cursor-pointer p-6 rounded-xl border-2 transition-all ${
                 currentClass === cls.id
-                  ? "border-blue-500 bg-blue-100 ring-2 ring-blue-300 transform scale-[1.02]"
-                  : "border-gray-200 hover:border-blue-300 hover:bg-gray-50"
+                  ? "border-blue-500 bg-blue-100 dark:bg-blue-900/30 ring-2 ring-blue-300 dark:ring-blue-700 transform scale-[1.02]"
+                  : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
-              <h3 className="font-bold text-xl mb-2 text-center">{cls.name}</h3>
-              <p className="text-gray-700 mb-3">{cls.desc}</p>
+              <h3 className="font-bold text-xl mb-2 text-center dark:text-white">{cls.name}</h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-3">{cls.desc}</p>
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center text-sm">
-                  <span className="font-medium text-gray-700 mr-2">
+                  <span className="font-medium text-gray-700 dark:text-gray-300 mr-2">
                     报考条件：
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 flex-shrink-0">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 flex-shrink-0">
                     {cls.condition}
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center text-sm">
-                  <span className="font-medium text-gray-700 mr-2">
+                  <span className="font-medium text-gray-700 dark:text-gray-300 mr-2">
                     可用频段：
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 break-words max-w-full">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 break-words max-w-full">
                     {cls.hz}
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center text-sm">
-                  <span className="font-medium text-gray-700 mr-2">
+                  <span className="font-medium text-gray-700 dark:text-gray-300 mr-2">
                     最大功率：
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 break-words max-w-full">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 break-words max-w-full">
                     {cls.watt}
                   </span>
                 </div>
@@ -86,25 +86,25 @@ const Home: React.FC = () => {
 
       {/* Learning Options Based on Selected Class */}
       <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
           2.选择学习模式
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             to="/practice"
-            className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center border border-blue-200"
+            className="bg-gradient-to-r from-blue-50 dark:from-blue-900/30 to-blue-100 dark:to-blue-800/30 p-6 rounded-xl shadow-md dark:shadow-gray-700 hover:shadow-lg transition-shadow text-center border border-blue-200 dark:border-blue-700"
           >
             <div className="text-4xl mb-3">📝</div>
-            <h3 className="text-lg font-semibold mb-2">刷题练习</h3>
-            <p className="text-gray-600 text-sm">逐题练习，掌握知识点</p>
+            <h3 className="text-lg font-semibold mb-2 dark:text-white">刷题练习</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">逐题练习，掌握知识点</p>
           </Link>
           <Link
             to="/exam"
-            className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center border border-green-200"
+            className="bg-gradient-to-r from-green-50 dark:from-green-900/30 to-green-100 dark:to-green-800/30 p-6 rounded-xl shadow-md dark:shadow-gray-700 hover:shadow-lg transition-shadow text-center border border-green-200 dark:border-green-700"
           >
             <div className="text-4xl mb-3">⏱️</div>
-            <h3 className="text-lg font-semibold mb-2">模拟考试</h3>
-            <p className="text-gray-600 text-sm">定时考试，检验学习成果</p>
+            <h3 className="text-lg font-semibold mb-2 dark:text-white">模拟考试</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">定时考试，检验学习成果</p>
           </Link>
         </div>
       </section>

@@ -80,20 +80,20 @@ const PWAInstallPrompt: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-xs z-50 transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+    <div className="fixed bottom-4 right-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-xs z-50 transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
       <div className="flex items-start">
         <div className="flex-1">
           <div className="flex items-center">
             <img src="/logo.svg" alt="Logo" className="w-8 h-8 mr-2" />
-            <h3 className="font-bold text-gray-800">安装应用</h3>
+            <h3 className="font-bold text-gray-800 dark:text-white">安装应用</h3>
           </div>
-          <p className="text-sm text-gray-600 mt-1">将业余无线电学习平台添加到主屏幕，随时随地练习考题。</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">将业余无线电学习平台添加到主屏幕，随时随地练习考题。</p>
         </div>
 
         <div className="flex space-x-1 ml-2">
           <button
             onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
+            className="p-1 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             aria-label="关闭"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -104,19 +104,19 @@ const PWAInstallPrompt: React.FC = () => {
       </div>
 
       <div className="mt-3 flex justify-between items-center">
-        <span className="text-xs text-gray-500">不再显示</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">不再显示</span>
         <div className="flex space-x-2">
           {isIOS() ? (
             <button
               onClick={handleClose}
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50"
+              className="px-3 py-1.5 text-sm rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               知道了
             </button>
           ) : (
             <button
               onClick={handleInstallClick}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="px-3 py-1.5 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
             >
               立即安装
             </button>
