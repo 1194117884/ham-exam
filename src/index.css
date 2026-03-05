@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 确保 html 和 body 在黑暗模式下也有正确的背景色 */
+/* 这能防止 iOS Safari 底部 Home Indicator 区域显示白色 */
+html, body {
+  @apply bg-gray-50 dark:bg-gray-900;
+  min-height: 100vh;
+}
+
 /* 移动端优化样式 */
 @media (max-width: 768px) {
   .container {
