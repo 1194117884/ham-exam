@@ -13,6 +13,7 @@ import Home from "./components/Home";
 import Practice from "./components/Practice";
 import Exam from "./components/Exam";
 import WrongBook from "./components/WrongBook";
+import Favorites from "./components/Favorites";
 
 // 引入结构化数据工具
 import { useOrganizationSchema } from './utils/structuredData';
@@ -39,10 +40,10 @@ const PageStructuredData: React.FC = () => {
           "@type": "WebSite",
           "name": "业余无线电学习平台",
           "description": "专业的业余无线电考试学习平台，提供A、B、C类题库练习、模拟考试和错题本功能，助您轻松通过业余无线电操作证书考试。",
-          "url": "https://your-domain.com/",
+          "url": "https://cqcq.yongkl.cc/",
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://your-domain.com/search?q={search_term_string}",
+            "target": "https://cqcq.yongkl.cc/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         };
@@ -53,7 +54,7 @@ const PageStructuredData: React.FC = () => {
           "@type": "WebPage",
           "name": "练习模式 - 业余无线电学习平台",
           "description": "在练习模式中顺序回答问题，学习业余无线电知识并获得详细解释。",
-          "url": "https://your-domain.com/practice"
+          "url": "https://cqcq.yongkl.cc/practice"
         };
         break;
       case '/exam':
@@ -62,7 +63,7 @@ const PageStructuredData: React.FC = () => {
           "@type": "WebPage",
           "name": "模拟考试 - 业余无线电学习平台",
           "description": "参加计时模拟考试，测试您的业余无线电知识准备情况。",
-          "url": "https://your-domain.com/exam"
+          "url": "https://cqcq.yongkl.cc/exam"
         };
         break;
       case '/wrong-book':
@@ -71,7 +72,7 @@ const PageStructuredData: React.FC = () => {
           "@type": "WebPage",
           "name": "错题本 - 业余无线电学习平台",
           "description": "复习您之前答错的问题，加强薄弱知识点的学习。",
-          "url": "https://your-domain.com/wrong-book"
+          "url": "https://cqcq.yongkl.cc/wrong-book"
         };
         break;
       default:
@@ -80,7 +81,7 @@ const PageStructuredData: React.FC = () => {
           "@type": "WebPage",
           "name": "业余无线电学习平台",
           "description": "专业的业余无线电考试学习平台",
-          "url": `https://your-domain.com${pathname}`
+          "url": `https://cqcq.yongkl.cc${pathname}`
         };
     }
 
@@ -111,7 +112,7 @@ const AppContent = () => {
     <>
       <SeoHead />
       <PageStructuredData />
-      <div className="min-h-screen bg-gray-50 pb-16"> {/* 为PWA安装提示留出空间 */}
+      <div className="min-h-screen bg-gray-50 pt-16 pb-16"> {/* 为固定导航栏和PWA安装提示留出空间 */}
         <Navbar />
         <main className="container mx-auto py-6">
           <Routes>
@@ -119,6 +120,7 @@ const AppContent = () => {
             <Route path="/practice" element={<Practice />} />
             <Route path="/exam" element={<Exam />} />
             <Route path="/wrong-book" element={<WrongBook />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

@@ -16,17 +16,21 @@ interface HamExamContextType extends HamExamState {
   setCurrentClass: (examClass: ExamClass) => void;
   addWrongAnswer: (record: Omit<WrongAnswerRecord, 'timestamp' | 'errorCount' | 'errorHistory'>) => void;
   clearWrongAnswers: () => void;
+  toggleFavorite: (questionId: string) => void;
+  clearFavorites: () => void;
   setFocusMode: (focus: boolean) => void;
   setPracticeSetting: (setting: keyof HamExamState['practiceSettings'], value: any) => void;
   updateProgress: (progressKey: string, questionIndex: number) => void;
   getQuestionsByClass: (examClass: ExamClass) => any[];
   getQuestionsByTopic: (examClass: ExamClass, topic: string) => any[];
   getWrongQuestions: () => any[];
+  getFavoriteQuestions: () => any[];
 }
 
 const initialState: HamExamState = {
   currentClass: 'A',
   wrongAnswers: {},
+  favorites: {},
   focusMode: false,
   practiceSettings: {
     shuffleQuestions: true,    // 默认随机题目顺序
@@ -40,7 +44,9 @@ const initialState: HamExamState = {
 type Action =
   | { type: 'SET_CURRENT_CLASS'; payload: ExamClass }
   | { type: 'ADD_WRONG_ANSWER'; payload: WrongAnswerRecord }
+  | { type: 'TOGGLE_FAVORITE'; payload: string }
   | { type: 'CLEAR_WRONG_ANSWERS' }
+  | { type: 'CLEAR_FAVORITES' }
   | { type: 'SET_FOCUS_MODE'; payload: boolean }
   | { type: 'UPDATE_PRACTICE_SETTING'; payload: { setting: keyof HamExamState['practiceSettings']; value: any } }
   | { type: 'UPDATE_PROGRESS'; payload: { key: string; questionIndex: number } };
@@ -57,8 +63,18 @@ const hamExamReducer = (state: HamExamState, action: Action): HamExamState => {
           [action.payload.questionId]: action.payload
         }
       };
+    case 'TOGGLE_FAVORITE':
+      return {
+        ...state,
+        favorites: {
+          ...state.favorites,
+          [action.payload]: !state.favorites[action.payload]
+        }
+      };
     case 'CLEAR_WRONG_ANSWERS':
       return { ...state, wrongAnswers: {} };
+    case 'CLEAR_FAVORITES':
+      return { ...state, favorites: {} };
     case 'SET_FOCUS_MODE':
       return { ...state, focusMode: action.payload };
     case 'UPDATE_PRACTICE_SETTING':
@@ -121,6 +137,14 @@ export const HamExamProvider: React.FC<{ children: ReactNode }> = ({ children })
     dispatch({ type: 'CLEAR_WRONG_ANSWERS' });
   };
 
+  const toggleFavorite = (questionId: string) => {
+    dispatch({ type: 'TOGGLE_FAVORITE', payload: questionId });
+  };
+
+  const clearFavorites = () => {
+    dispatch({ type: 'CLEAR_FAVORITES' });
+  };
+
   const setFocusMode = (focus: boolean) => {
     dispatch({ type: 'SET_FOCUS_MODE', payload: focus });
   };
@@ -162,17 +186,25 @@ export const HamExamProvider: React.FC<{ children: ReactNode }> = ({ children })
     return currentQuestions.filter((q: any) => state.wrongAnswers[q.id]);
   };
 
+  const getFavoriteQuestions = () => {
+    const currentQuestions = getQuestionsByClass(state.currentClass);
+    return currentQuestions.filter((q: any) => state.favorites[q.id]);
+  };
+
   const value: HamExamContextType = {
     ...state,
     setCurrentClass,
     addWrongAnswer,
     clearWrongAnswers,
+    toggleFavorite,
+    clearFavorites,
     setFocusMode,
     setPracticeSetting,
     updateProgress,
     getQuestionsByClass,
     getQuestionsByTopic,
-    getWrongQuestions
+    getWrongQuestions,
+    getFavoriteQuestions
   };
 
   return (

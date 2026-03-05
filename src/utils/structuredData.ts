@@ -54,8 +54,8 @@ export const useOrganizationSchema = () => {
     "@type": "EducationalOrganization",
     "name": "业余无线电学习平台",
     "description": "专业的业余无线电考试学习平台，提供A、B、C类题库练习、模拟考试和错题本功能",
-    "url": "https://your-domain.com",
-    "logo": "https://your-domain.com/logo.svg",
+    "url": "https://cqcq.yongkl.cc",
+    "logo": "https://cqcq.yongkl.cc/logo.svg",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "",
@@ -76,7 +76,7 @@ export const useCourseSchema = (courseName: string, courseDescription: string) =
     "provider": {
       "@type": "Organization",
       "name": "业余无线电学习平台",
-      "sameAs": "https://your-domain.com"
+      "sameAs": "https://cqcq.yongkl.cc"
     }
   };
 

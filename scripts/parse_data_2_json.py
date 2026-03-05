@@ -114,7 +114,7 @@ def parse_questions(txt_path: str) -> Tuple[List[Dict], Dict]:
         if q_data['attachment']:
             stats['with_attachment'] += 1
             attachment_url = q_data['attachment']
-            question_content += f'\n\n<img src="{attachment_url}" alt="题目附图" class="max-w-full h-auto mt-4 rounded-lg shadow-md">'
+            # question_content += f'\n\n<img src="{attachment_url}" alt="题目附图" class="max-w-full h-auto mt-4 rounded-lg shadow-md">'
 
         questions.append({
             'id': f"[{question_num}]",

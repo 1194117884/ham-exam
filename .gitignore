@@ -3,4 +3,3 @@ node_modules/
 .vscode/
 package-lock.json
 .claude/
-.DS_Store

@@ -3,7 +3,16 @@ import React, { useState, useEffect } from "react";
 import { useHamExam } from "../contexts/HamExamContext";
 
 const Practice: React.FC = () => {
-  const { currentClass, getQuestionsByClass, addWrongAnswer, updateProgress, progress, practiceSettings } = useHamExam();
+  const {
+    currentClass,
+    getQuestionsByClass,
+    addWrongAnswer,
+    updateProgress,
+    progress,
+    practiceSettings,
+    toggleFavorite,
+    favorites,
+  } = useHamExam();
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -112,9 +121,13 @@ const Practice: React.FC = () => {
     const isFullyCorrect = selectedLetters === correctAnswer;
 
     // 判断是否为漏选情况（至少选中了一个正确答案，但未全选中）
-    const selectedLettersArray = selectedOptions.map(opt => opt.charAt(0));
-    const hasCorrectSelection = originalAnswer.some((ans: string) => selectedLettersArray.includes(ans)); // 至少包含一个正确选项
-    const hasMissingSelection = originalAnswer.some((ans: string) => !selectedLettersArray.includes(ans)); // 至少缺少一个正确选项
+    const selectedLettersArray = selectedOptions.map((opt) => opt.charAt(0));
+    const hasCorrectSelection = originalAnswer.some((ans: string) =>
+      selectedLettersArray.includes(ans),
+    ); // 至少包含一个正确选项
+    const hasMissingSelection = originalAnswer.some(
+      (ans: string) => !selectedLettersArray.includes(ans),
+    ); // 至少缺少一个正确选项
     const isPartialCorrect = hasCorrectSelection && hasMissingSelection; // 漏选情况
 
     if (!isFullyCorrect) {
@@ -235,7 +248,7 @@ const Practice: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="max-w-3xl mx-auto">
       {/* Centered progress indicator */}
       <div className="flex justify-center mb-6">
         {isInputFocused ? (
@@ -271,30 +284,64 @@ const Practice: React.FC = () => {
             <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">
               {currentQuestion.topic}
             </span>
+            <span
+              className={`inline-block px-2 py-1 rounded text-xs ${
+                typeof currentQuestion.answer === "string"
+                  ? currentQuestion.answer.length > 1
+                    ? "bg-purple-100 text-purple-800"
+                    : "bg-green-100 text-green-800"
+                  : currentQuestion.answer.length > 1
+                    ? "bg-purple-100 text-purple-800"
+                    : "bg-green-100 text-green-800"
+              }`}
+            >
+              {typeof currentQuestion.answer === "string"
+                ? currentQuestion.answer.length > 1
+                  ? "多选"
+                  : "单选"
+                : currentQuestion.answer.length > 1
+                  ? "多选"
+                  : "单选"}
+            </span>
           </div>
 
-          <span
-            className={`inline-block px-2 py-1 rounded text-xs ${
-              typeof currentQuestion.answer === "string"
-                ? currentQuestion.answer.length > 1
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-green-100 text-green-800"
-                : currentQuestion.answer.length > 1
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-green-100 text-green-800"
-            }`}
-          >
-            {typeof currentQuestion.answer === "string"
-              ? currentQuestion.answer.length > 1
-                ? "多选题"
-                : "单选题"
-              : currentQuestion.answer.length > 1
-                ? "多选题"
-                : "单选题"}
-          </span>
+          <div className="flex items-center">
+            <button
+              onClick={() => toggleFavorite(currentQuestion.id)}
+              className={`p-1 rounded transition-colors flex flex-col items-center justify-center ${
+                favorites[currentQuestion.id]
+                  ? "text-yellow-500 hover:text-yellow-600"
+                  : "text-gray-400 hover:text-yellow-500"
+              }`}
+              title={favorites[currentQuestion.id] ? "取消收藏" : "收藏题目"}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <h3 className="text-lg font-medium mb-4">{currentQuestion.content}</h3>
+
+        {/* Display attachment image if available */}
+        {currentQuestion.attachment && (
+          <div className="mb-4 flex justify-center">
+            <img
+              src={currentQuestion.attachment}
+              alt="题目附件"
+              className="max-w-full h-auto rounded-lg border border-gray-300"
+              onError={() => {
+                console.warn(`Failed to load attachment: ${currentQuestion.attachment}`);
+              }}
+            />
+          </div>
+        )}
 
         <div className="space-y-2 mb-6">
           {originalOptions.map(
@@ -339,12 +386,16 @@ const Practice: React.FC = () => {
                 >
                   <span className="font-medium">{optionLetter}.</span>{" "}
                   {option.substring(3)} {/* Remove "A. " prefix */}
-                  {showResult && !isOptionSelected(option) && originalAnswer.includes(optionLetter) && (
-                    <span className="ml-2 text-green-600">(漏选)</span>
-                  )}
-                  {showResult && isOptionSelected(option) && !originalAnswer.includes(optionLetter) && (
-                    <span className="ml-2 text-red-600">(错误选择)</span>
-                  )}
+                  {showResult &&
+                    !isOptionSelected(option) &&
+                    originalAnswer.includes(optionLetter) && (
+                      <span className="ml-2 text-green-600">(漏选)</span>
+                    )}
+                  {showResult &&
+                    isOptionSelected(option) &&
+                    !originalAnswer.includes(optionLetter) && (
+                      <span className="ml-2 text-red-600">(错误选择)</span>
+                    )}
                 </div>
               );
             },
@@ -365,13 +416,7 @@ const Practice: React.FC = () => {
               disabled={selectedOptions.length === 0}
               className="px-6 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
             >
-              {typeof currentQuestion.answer === "string"
-                ? currentQuestion.answer.length > 1
-                  ? "提交答案"
-                  : "确认"
-                : currentQuestion.answer.length > 1
-                  ? "提交答案"
-                  : "确认"}
+              确认
             </button>
             <button
               onClick={handleNext}

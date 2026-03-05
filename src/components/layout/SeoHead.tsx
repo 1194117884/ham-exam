@@ -19,7 +19,7 @@ const SeoHead: React.FC<SeoHeadProps> = ({
   schemaData
 }) => {
   const location = useLocation();
-  const currentUrl = `https://your-domain.com${location.pathname}`;
+  const currentUrl = `https://cqcq.yongkl.cc${location.pathname}`;
 
   useEffect(() => {
     // 更新页面标题

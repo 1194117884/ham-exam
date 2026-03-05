@@ -89,7 +89,7 @@ const Home: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           2.选择学习模式
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
             to="/practice"
             className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center border border-blue-200"
@@ -105,14 +105,6 @@ const Home: React.FC = () => {
             <div className="text-4xl mb-3">⏱️</div>
             <h3 className="text-lg font-semibold mb-2">模拟考试</h3>
             <p className="text-gray-600 text-sm">定时考试，检验学习成果</p>
-          </Link>
-          <Link
-            to="/wrong-book"
-            className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center border border-purple-200"
-          >
-            <div className="text-4xl mb-3">📚</div>
-            <h3 className="text-lg font-semibold mb-2">错题本</h3>
-            <p className="text-gray-600 text-sm">回顾错题，强化薄弱环节</p>
           </Link>
         </div>
       </section>

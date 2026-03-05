@@ -5,7 +5,7 @@ import { useHamExam } from '../../contexts/HamExamContext';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
-  const { currentClass, setCurrentClass, wrongAnswers } = useHamExam();
+  const { currentClass, setCurrentClass, wrongAnswers, favorites } = useHamExam();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md relative">
+    <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-40">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -84,6 +84,21 @@ const Navbar: React.FC = () => {
               {Object.keys(wrongAnswers).length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
                   {Object.keys(wrongAnswers).length > 99 ? '99+' : Object.keys(wrongAnswers).length}
+                </span>
+              )}
+            </Link>
+            <Link
+              to="/favorites"
+              className={`h-16 flex items-center px-1 pt-1 relative ${
+                isActive('/favorites')
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-blue-600'
+              }`}
+            >
+              收藏
+              {Object.keys(favorites).filter(key => favorites[key]).length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
+                  {Object.keys(favorites).filter(key => favorites[key]).length > 99 ? '99+' : Object.keys(favorites).filter(key => favorites[key]).length}
                 </span>
               )}
             </Link>
@@ -161,6 +176,22 @@ const Navbar: React.FC = () => {
             {Object.keys(wrongAnswers).length > 0 && (
               <span className="absolute top-2 right-3 bg-red-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
                 {Object.keys(wrongAnswers).length > 99 ? '99+' : Object.keys(wrongAnswers).length}
+              </span>
+            )}
+          </Link>
+          <Link
+            to="/favorites"
+            className={`block pl-3 pr-4 py-2 border-l-4 relative ${
+              isActive('/favorites')
+                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300'
+            }`}
+            onClick={() => setIsMenuOpen(false)} // Close menu when clicking a link
+          >
+            收藏
+            {Object.keys(favorites).filter(key => favorites[key]).length > 0 && (
+              <span className="absolute top-2 right-3 bg-yellow-500 text-white text-xs rounded-full h-6 min-w-6 flex items-center justify-center px-1">
+                {Object.keys(favorites).filter(key => favorites[key]).length > 99 ? '99+' : Object.keys(favorites).filter(key => favorites[key]).length}
               </span>
             )}
           </Link>

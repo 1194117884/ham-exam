@@ -7,6 +7,7 @@ export interface Question {
   options: string[]; // 选项
   answer: string;    // 正确答案（多选）
   explanation?: string; // 答案解析
+  attachment?: string;  // 附件图片链接
 }
 
 export type ExamClass = 'A' | 'B' | 'C';
@@ -34,6 +35,7 @@ export interface WrongAnswerRecord {
 export interface HamExamState {
   currentClass: ExamClass;
   wrongAnswers: Record<string, WrongAnswerRecord>; // questionId -> record
+  favorites: Record<string, boolean>; // questionId -> favorited
   focusMode: boolean; // 专注模式，只做错题
   practiceSettings: {
     shuffleQuestions: boolean;    // 是否随机题目顺序

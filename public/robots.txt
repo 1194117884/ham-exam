@@ -3,7 +3,7 @@ Allow: /
 Disallow: /dist/
 
 # Sitemap
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://cqcq.yongkl.cc/sitemap.xml
 
 # Crawl-delay for slower bots
 Crawl-delay: 5
@@ -19,4 +19,4 @@ User-agent: DuckDuckBot
 Allow: /
 
 # Host directive
-Host: https://your-domain.com
+Host: https://cqcq.yongkl.cc

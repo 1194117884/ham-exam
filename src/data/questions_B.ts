@@ -8669,7 +8669,7 @@ export const questionsData_B = [
   {
     "id": "[LK0944:MC1-0665]",
     "topic": "频率管理",
-    "content": "谐振的垂直接地天线的振子长度最短也要 1/4 波长。如果架设天线时因条件受限而不得不将振子缩短，那么在振子之中串入电感可以补偿失去的感抗，使天线谐振在所需频率上。为了提高发射效率， 应在振子的什么位置串入电感需根据架设条件择优确定。 下图给出三种加感方案。假设振子（灰色部分）均等长，则 A、B、C 三种方案按发射效率可排列为：\n\n<img src=\"https://docs.yongkl.cc/LK0944.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "谐振的垂直接地天线的振子长度最短也要 1/4 波长。如果架设天线时因条件受限而不得不将振子缩短，那么在振子之中串入电感可以补偿失去的感抗，使天线谐振在所需频率上。为了提高发射效率， 应在振子的什么位置串入电感需根据架设条件择优确定。 下图给出三种加感方案。假设振子（灰色部分）均等长，则 A、B、C 三种方案按发射效率可排列为：",
     "options": [
       "A. A-底部加感，B-中部加感，C-顶部加感",
       "B. A-底部加感，C-顶部加感，B-中部加感",
@@ -9719,7 +9719,7 @@ export const questionsData_B = [
   {
     "id": "[LK0941:MC1-0740]",
     "topic": "频率管理",
-    "content": "下图所示是我国业余无线电爱好者开展野外通信活动常用的 14/21/29MHz 三频段偶极天线。图中天线各段的电气长度应分别为：\n\n<img src=\"https://docs.yongkl.cc/LK0941.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "下图所示是我国业余无线电爱好者开展野外通信活动常用的 14/21/29MHz 三频段偶极天线。图中天线各段的电气长度应分别为：",
     "options": [
       "A. A 为 28MHz 的半波长，A+B 为 21MHz 的半波长，A+B+C 为 14MHz 的半波长",
       "B. A 为 28MHz 的半波长，B 为 21MHz 的半波长，C 为 14MHz 的半波长",
@@ -9733,7 +9733,7 @@ export const questionsData_B = [
   {
     "id": "[LK0942:MC1-0741]",
     "topic": "频率管理",
-    "content": "下图所示是我国业余无线电爱好者开展野外通信活动常用的 14/21/29MHz 三频段偶极天线。图中部件 A、B、C、D 的作用分别为：\n\n<img src=\"https://docs.yongkl.cc/LK0942.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "下图所示是我国业余无线电爱好者开展野外通信活动常用的 14/21/29MHz 三频段偶极天线。图中部件 A、B、C、D 的作用分别为：",
     "options": [
       "A. A、D 为 21MHz 陷波器，B、C 为 28MHz 陷波器，即，分别谐振于 21MHz 和 28MHz的串联谐振回路",
       "B. A、D 为 14MHz 陷波器，B、C 为 21MHz 陷波器，即，分别谐振于 14MHz 和 21MHz的串联谐振回路",
@@ -9747,7 +9747,7 @@ export const questionsData_B = [
   {
     "id": "[LK0943:MC1-0742]",
     "topic": "频率管理",
-    "content": "谐振偶极天线的振子长度最短也要半个波长。如果架设天线时因条件受限而不得不将振子缩短， 那么在振子之中串入电感可以补偿失去的感抗， 使天线谐振在所需频率下。 为了提高发射效率， 应在振子的什么位置串入电感需根据架设条件择优确定。 下图给出三种加感方案。假设振子（灰色部分）均等长，则 A、B、C 三种方案按发射效率可排列为：\n\n<img src=\"https://docs.yongkl.cc/LK0943.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "谐振偶极天线的振子长度最短也要半个波长。如果架设天线时因条件受限而不得不将振子缩短， 那么在振子之中串入电感可以补偿失去的感抗， 使天线谐振在所需频率下。 为了提高发射效率， 应在振子的什么位置串入电感需根据架设条件择优确定。 下图给出三种加感方案。假设振子（灰色部分）均等长，则 A、B、C 三种方案按发射效率可排列为：",
     "options": [
       "A. A-底部加感，C-顶部加感，B-中部加感",
       "B. B-中部加感，A-底部加感，C-顶部加感",
@@ -9761,7 +9761,7 @@ export const questionsData_B = [
   {
     "id": "[LK0945:MC1-0743]",
     "topic": "频率管理",
-    "content": "对于需要频繁改换频段的业余无线电业务，爱好者们有时会将所用频段的偶极振子并联起来一同馈电，构成一种用一根电缆即可操作的多频段天线。下图给出了一副由 7、14 和28MHz 半波长振子构成的多频段天线实例。关于其工作原理，以下分析正确的是：\n\n<img src=\"https://docs.yongkl.cc/LK0945.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "对于需要频繁改换频段的业余无线电业务，爱好者们有时会将所用频段的偶极振子并联起来一同馈电，构成一种用一根电缆即可操作的多频段天线。下图给出了一副由 7、14 和28MHz 半波长振子构成的多频段天线实例。关于其工作原理，以下分析正确的是：",
     "options": [
       "A. 该天线工作于 7、14 和 28MHz。由于每个振子的阻抗都在 50 欧上下，所以并联后的总阻抗降至 17 欧左右",
       "B. 7MHz 振子以 3/2 波长方式工作于 21MHz，该天线由此工作在 7、14、21 和 28MHz 四个频段。由于不谐振的振子呈现高阻抗，所以并联后的总阻抗仍为 50 欧左右",
@@ -9957,7 +9957,7 @@ export const questionsData_B = [
   {
     "id": "[LK0938:MC1-0757]",
     "topic": "天线基础",
-    "content": "塔上某天线通过 50 欧馈线连至 50 欧输出阻抗的收发信机。现需要在天线电路中串入天线调谐器 ATU 和通过式驻波功率计 M 对天线的匹配情况进行补偿和监测。 有四种方案可选：1：ATU 和 M 都在塔顶；2：ATU 和 M 都在塔底；3：ATU 在塔底，M 在机房；4：ATU 和 M 都在机房。ATU 完成调谐时，若按天线系统整体效率从高到低为序，各方案可排列为：\n\n<img src=\"https://docs.yongkl.cc/LK0938.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "塔上某天线通过 50 欧馈线连至 50 欧输出阻抗的收发信机。现需要在天线电路中串入天线调谐器 ATU 和通过式驻波功率计 M 对天线的匹配情况进行补偿和监测。 有四种方案可选：1：ATU 和 M 都在塔顶；2：ATU 和 M 都在塔底；3：ATU 在塔底，M 在机房；4：ATU 和 M 都在机房。ATU 完成调谐时，若按天线系统整体效率从高到低为序，各方案可排列为：",
     "options": [
       "A. 方案 1 最好，方案 2、3 其次，方案 4 最差",
       "B. 方案 2 最好，方案 1 其次，方案 4 再其次，方案 3 最差",
@@ -10391,7 +10391,7 @@ export const questionsData_B = [
   {
     "id": "[LK0927:MC1-0788]",
     "topic": "天线基础",
-    "content": "业余条件下测试天线增益的典型方法如下图所示。用场强表或接收机接收设置在远处同一地点，最大辐射方向朝向自己的半波偶极天线（上）和待测天线（下）的信号。调整送至两副天线的射频功率 Po 和 P，使收到的场强相同。则，待测天线的增益 dBd 值为：\n\n<img src=\"https://docs.yongkl.cc/LK0927.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "业余条件下测试天线增益的典型方法如下图所示。用场强表或接收机接收设置在远处同一地点，最大辐射方向朝向自己的半波偶极天线（上）和待测天线（下）的信号。调整送至两副天线的射频功率 Po 和 P，使收到的场强相同。则，待测天线的增益 dBd 值为：",
     "options": [
       "A. 10 log(P-Po)",
       "B. P - Po",
@@ -10405,7 +10405,7 @@ export const questionsData_B = [
   {
     "id": "[LK0928:MC1-0789]",
     "topic": "天线基础",
-    "content": "业余条件下测试天线增益的典型方法如下图所示。用场强表或接收机接收设置在远处同一地点，最大辐射方向朝向自己的半波偶极天线（上）和待测天线（下）的信号。调整送至两副天线的射频功率 Po 和 P，使收到的场强相同。则，待测天线的增益 dBi 值为：\n\n<img src=\"https://docs.yongkl.cc/LK0928.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "业余条件下测试天线增益的典型方法如下图所示。用场强表或接收机接收设置在远处同一地点，最大辐射方向朝向自己的半波偶极天线（上）和待测天线（下）的信号。调整送至两副天线的射频功率 Po 和 P，使收到的场强相同。则，待测天线的增益 dBi 值为：",
     "options": [
       "A. 20 log(P/Po) + 2.15",
       "B. 10 log(P-Po) + 2.15",
@@ -13653,7 +13653,7 @@ export const questionsData_B = [
   {
     "id": "[LK0497:MC1-1059]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0497.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 接地",
       "B. 天线",
@@ -13667,7 +13667,7 @@ export const questionsData_B = [
   {
     "id": "[LK0498:MC1-1060]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0498.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 接地",
       "B. 二极管",
@@ -13681,7 +13681,7 @@ export const questionsData_B = [
   {
     "id": "[LK0499:MC1-1061]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0499.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 二极管",
       "B. 电容",
@@ -13695,7 +13695,7 @@ export const questionsData_B = [
   {
     "id": "[LK0500:MC1-1062]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0500.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 电容器",
       "B. 电阻",
@@ -13709,7 +13709,7 @@ export const questionsData_B = [
   {
     "id": "[LK0501:MC1-1063]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0501.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 压电晶体",
       "B. 电容器",
@@ -13723,7 +13723,7 @@ export const questionsData_B = [
   {
     "id": "[LK0502:MC1-1064]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0502.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 线圈",
       "B. 二极管",
@@ -13737,7 +13737,7 @@ export const questionsData_B = [
   {
     "id": "[LK0503:MC1-1065]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0503.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 线圈",
       "B. 电容器",
@@ -13751,7 +13751,7 @@ export const questionsData_B = [
   {
     "id": "[LK0504:MC1-1066]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0504.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 二极管",
       "B. 电阻",
@@ -13765,7 +13765,7 @@ export const questionsData_B = [
   {
     "id": "[LK0505:MC1-1067]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0505.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 压电晶体",
       "B. 二极管",
@@ -13779,7 +13779,7 @@ export const questionsData_B = [
   {
     "id": "[LK0506:MC1-1068]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0506.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 发光二极管",
       "B. 电阻",
@@ -13793,7 +13793,7 @@ export const questionsData_B = [
   {
     "id": "[LK0507:MC1-1069]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0507.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 压电晶体",
       "B. 发光二极管",
@@ -13807,7 +13807,7 @@ export const questionsData_B = [
   {
     "id": "[LK0508:MC1-1070]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0508.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. PNP 双极型晶体管",
       "B. 结型场效应晶体管",
@@ -13821,7 +13821,7 @@ export const questionsData_B = [
   {
     "id": "[LK0509:MC1-1071]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0509.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. PNP 双极型晶体管",
       "B. 绝缘栅场效应晶体管",
@@ -13835,7 +13835,7 @@ export const questionsData_B = [
   {
     "id": "[LK0510:MC1-1072]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0510.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 结型场效应晶体管",
       "B. 绝缘栅场效应晶体管",
@@ -13849,7 +13849,7 @@ export const questionsData_B = [
   {
     "id": "[LK0511:MC1-1073]",
     "topic": "电路基础",
-    "content": "附图中的电路元器件符号代表：\n\n<img src=\"https://docs.yongkl.cc/LK0511.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "附图中的电路元器件符号代表：",
     "options": [
       "A. 绝缘栅场效应晶体管",
       "B. NPN 双极型晶体管",
@@ -15137,7 +15137,7 @@ export const questionsData_B = [
   {
     "id": "[LK0614:MC1-1314]",
     "topic": "电路基础",
-    "content": "图示电路为业余无线电爱好者常用的简易场强表。各部件的作用分别为：\n\n<img src=\"https://docs.yongkl.cc/LK0614.jpg\" alt=\"题目附图\" class=\"max-w-full h-auto mt-4 rounded-lg shadow-md\">",
+    "content": "图示电路为业余无线电爱好者常用的简易场强表。各部件的作用分别为：",
     "options": [
       "A. A-接收电波，C1、C2 旁路滤波，L-升压，VD-放大，C3-隔直流，M-指示",
       "B. A-接收电波，C1、C2、L-谐振选频，VD-检波，C3-旁路滤波，M-指示",
