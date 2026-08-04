@@ -41,6 +41,30 @@
       "dest": "/dist/assets/$1"
     },
     {
+      "src": "/llms.txt",
+      "dest": "/dist/llms.txt"
+    },
+    {
+      "src": "/baidu_sitemap.xml",
+      "dest": "/dist/baidu_sitemap.xml"
+    },
+    {
+      "src": "/indexnow-(.*).txt",
+      "dest": "/dist/indexnow-$1.txt"
+    },
+    {
+      "src": "/baidu_verify_(.*).html",
+      "dest": "/dist/baidu_verify_$1.html"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/dist/robots.txt"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/dist/sitemap.xml"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

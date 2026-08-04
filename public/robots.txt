@@ -1,22 +1,134 @@
+# ============================================================
+# 业余无线电学习平台 - robots.txt
+# 最后更新: 2026-08-04
+# ============================================================
+
+# ----- 通用规则 -----
 User-agent: *
 Allow: /
 Disallow: /dist/
-
-# Sitemap
-Sitemap: https://cqcq.yongkl.cc/sitemap.xml
-
-# Crawl-delay for slower bots
 Crawl-delay: 5
 
-# Specific bot directives
+# Sitemap 索引
+Sitemap: https://cqcq.yongkl.cc/sitemap.xml
+Sitemap: https://cqcq.yongkl.cc/baidu_sitemap.xml
+
+# ----- 搜索引擎爬虫 -----
+
+# Google
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
+User-agent: Googlebot-Image
+Allow: /
+Crawl-delay: 0
+
+# Bing
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 0
 
+# 百度
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider-image
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider-mobile
+Allow: /
+Crawl-delay: 1
+
+# 搜狗
+User-agent: Sogou web spider
+Allow: /
+Crawl-delay: 2
+
+# 360
+User-agent: 360Spider
+Allow: /
+Crawl-delay: 2
+
+# 字节跳动
+User-agent: Bytespider
+Allow: /
+Crawl-delay: 2
+
+# DuckDuckGo
 User-agent: DuckDuckBot
 Allow: /
+Crawl-delay: 1
 
-# Host directive
+# ----- LLM / AI 爬虫 -----
+
+# OpenAI - ChatGPT
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 2
+
+# Anthropic - Claude
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 2
+
+User-agent: anthropic-ai
+Allow: /
+Crawl-delay: 2
+
+# Google - Gemini
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 2
+
+# Common Crawl (用于训练多个 LLM)
+User-agent: CCBot
+Allow: /
+Crawl-delay: 2
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 2
+
+# Meta - Llama
+User-agent: meta-externalagent
+Allow: /
+Crawl-delay: 2
+
+# Apple - Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+Crawl-delay: 2
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+Crawl-delay: 2
+
+# Mistral
+User-agent: MistralAI-UserAgent
+Allow: /
+Crawl-delay: 2
+
+# ----- 屏蔽规则 -----
+
+# 屏蔽所有爬虫访问 API 路径
+User-agent: *
+Disallow: /api/
+Disallow: /dist/
+
+# 屏蔽已知的恶意爬虫
+User-agent: PetalBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Host 指令
 Host: https://cqcq.yongkl.cc

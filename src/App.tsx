@@ -17,7 +17,7 @@ import WrongBook from "./components/WrongBook";
 import Favorites from "./components/Favorites";
 
 // 引入结构化数据工具
-import { useOrganizationSchema } from './utils/structuredData';
+import { useOrganizationSchema, useFAQPageSchema } from './utils/structuredData';
 
 // 引入SEO头部组件
 import SeoHead from './components/layout/SeoHead';
@@ -29,6 +29,7 @@ const PageStructuredData: React.FC = () => {
   const { pathname } = location;
 
   useOrganizationSchema();
+  useFAQPageSchema();
 
   // 根据路径添加不同的结构化数据
   useEffect(() => {

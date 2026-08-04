@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <webSite>https://cqcq.yongkl.cc</webSite>
+  <webMaster>请在百度站长平台添加站点后获取验证文件</webMaster>
+  <updatePer>weekly</updatePer>
+  <updatetime>2026-08-04 00:00:00</updatetime>
+  <version>1.0</version>
+
+  <item>
+    <title>业余无线电学习平台 - 首页</title>
+    <link>https://cqcq.yongkl.cc/</link>
+    <description>专业的业余无线电考试学习平台，选择证书类别和学习模式</description>
+    <pubDate>2026-08-04</pubDate>
+    <category>教育</category>
+    <author>业余无线电学习平台</author>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <MobileType>pc,mobile</MobileType>
+  </item>
+
+  <item>
+    <title>刷题练习 - 业余无线电学习平台</title>
+    <link>https://cqcq.yongkl.cc/practice</link>
+    <description>逐题练习A/B/C类业余无线电考试题库，支持进度记忆和题目跳转</description>
+    <pubDate>2026-08-04</pubDate>
+    <category>在线教育</category>
+    <author>业余无线电学习平台</author>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <MobileType>pc,mobile</MobileType>
+  </item>
+
+  <item>
+    <title>模拟考试 - 业余无线电学习平台</title>
+    <link>https://cqcq.yongkl.cc/exam</link>
+    <description>按真实考试规则组卷的计时模拟考试，覆盖A/B/C三类证书</description>
+    <pubDate>2026-08-04</pubDate>
+    <category>在线教育</category>
+    <author>业余无线电学习平台</author>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <MobileType>pc,mobile</MobileType>
+  </item>
+
+  <item>
+    <title>错题本 - 业余无线电学习平台</title>
+    <link>https://cqcq.yongkl.cc/wrong-book</link>
+    <description>自动记录错题，统计错误次数，针对性强化薄弱知识点</description>
+    <pubDate>2026-08-04</pubDate>
+    <category>在线教育</category>
+    <author>业余无线电学习平台</author>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <MobileType>pc,mobile</MobileType>
+  </item>
+
+  <item>
+    <title>收藏 - 业余无线电学习平台</title>
+    <link>https://cqcq.yongkl.cc/favorites</link>
+    <description>收藏重点题目，集中复习巩固</description>
+    <pubDate>2026-08-04</pubDate>
+    <category>在线教育</category>
+    <author>业余无线电学习平台</author>
+    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+    <MobileType>pc,mobile</MobileType>
+  </item>
+</document>
