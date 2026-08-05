@@ -65,6 +65,22 @@
       "dest": "/dist/sitemap.xml"
     },
     {
+      "src": "/practice",
+      "dest": "/dist/practice/index.html"
+    },
+    {
+      "src": "/exam",
+      "dest": "/dist/exam/index.html"
+    },
+    {
+      "src": "/wrong-book",
+      "dest": "/dist/wrong-book/index.html"
+    },
+    {
+      "src": "/favorites",
+      "dest": "/dist/favorites/index.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
