@@ -25,20 +25,23 @@ const ROUTES = [
 ];
 
 const CHROME_PATHS = [
+  process.env.PUPPETEER_EXECUTABLE_PATH,
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '/usr/bin/google-chrome-stable',
   '/usr/bin/google-chrome',
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
+  '/usr/bin/chromium-browser-stable',
+  '/opt/google/chrome/chrome',
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-];
+].filter(Boolean);
 
 function findChrome() {
   for (const p of CHROME_PATHS) {
     if (existsSync(p)) return p;
   }
-  throw new Error('Chrome not found. Install Google Chrome.');
+  throw new Error('Chrome not found. Set PUPPETEER_EXECUTABLE_PATH env var or install Chrome.');
 }
 
 function startPreviewServer() {
