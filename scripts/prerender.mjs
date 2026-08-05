@@ -7,11 +7,11 @@
  */
 
 import puppeteer from 'puppeteer-core';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
+import http from 'http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '..', 'dist');
@@ -54,42 +54,48 @@ async function findChrome() {
   return null;
 }
 
-function startPreviewServer() {
+// 简单的静态文件服务器（替代 vite preview，不依赖 npx）
+function startStaticServer() {
   return new Promise((resolve, reject) => {
-    const proc = spawn('npx', ['vite', 'preview', '--port', '4567', '--strictPort', '--host', '0.0.0.0'], {
-      cwd: resolve(__dirname, '..'),
-      stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env },
-    });
-
-    const timeout = setTimeout(() => {
-      proc.kill();
-      reject(new Error('vite preview 启动超时'));
-    }, 30000);
-
-    // 轮询等待服务器就绪
-    const checkServer = async () => {
-      for (let i = 0; i < 30; i++) {
-        try {
-          await fetch('http://localhost:4567/');
-          clearTimeout(timeout);
-          resolve(proc);
-          return;
-        } catch {
-          await new Promise(r => setTimeout(r, 1000));
-        }
-      }
-      clearTimeout(timeout);
-      proc.kill();
-      reject(new Error('vite preview 服务器无法连接'));
+    const MIME = {
+      '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css',
+      '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
+      '.ico': 'image/x-icon', '.txt': 'text/plain', '.xml': 'application/xml',
+      '.woff2': 'font/woff2',
     };
 
-    proc.on('error', (err) => {
-      clearTimeout(timeout);
-      reject(err);
+    const server = http.createServer(async (req, res) => {
+      try {
+        let urlPath = req.url.split('?')[0];
+        if (urlPath === '/') urlPath = '/index.html';
+
+        const cleanPath = urlPath.replace(/^\//, '');
+        const filePath = resolve(distDir, cleanPath);
+
+        try {
+          const data = await readFile(filePath);
+          const ext = extname(filePath).toLowerCase();
+          res.writeHead(200, { 'Content-Type': MIME[ext] || 'text/plain' });
+          res.end(data);
+        } catch (err) {
+          if (err.code === 'ENOENT') {
+            // SPA fallback
+            const data = await readFile(resolve(distDir, 'index.html'));
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+          } else {
+            res.writeHead(500);
+            res.end('Server Error');
+          }
+        }
+      } catch {
+        res.writeHead(500);
+        res.end('Server Error');
+      }
     });
 
-    checkServer();
+    server.listen(4567, () => resolve(server));
+    server.on('error', reject);
   });
 }
 
@@ -166,9 +172,9 @@ async function main() {
     puppeteerArgs.push('--single-process');
   }
 
-  // 启动 vite preview 服务器
-  console.log('  启动 vite preview...');
-  const serverProc = await startPreviewServer();
+  // 启动静态文件服务器
+  console.log('  启动静态文件服务器...');
+  const server = await startStaticServer();
   const baseUrl = 'http://localhost:4567';
   console.log(`  服务器: ${baseUrl}\n`);
 
@@ -184,9 +190,7 @@ async function main() {
     }
   } finally {
     await browser.close();
-    if (serverProc && serverProc.pid) {
-      process.kill(serverProc.pid, 'SIGTERM');
-    }
+    server.close();
   }
 
   console.log('\n✅ 预渲染完成！Google 现在可以立即索引所有页面内容。\n');
