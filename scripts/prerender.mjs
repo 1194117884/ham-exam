@@ -56,43 +56,40 @@ async function findChrome() {
 
 function startPreviewServer() {
   return new Promise((resolve, reject) => {
-    const proc = spawn('npx', ['vite', 'preview', '--port', '4567', '--strictPort'], {
+    const proc = spawn('npx', ['vite', 'preview', '--port', '4567', '--strictPort', '--host', '0.0.0.0'], {
       cwd: resolve(__dirname, '..'),
       stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env },
     });
 
-    let started = false;
     const timeout = setTimeout(() => {
-      if (!started) {
-        proc.kill();
-        reject(new Error('vite preview 启动超时'));
-      }
-    }, 15000);
+      proc.kill();
+      reject(new Error('vite preview 启动超时'));
+    }, 30000);
 
-    proc.stdout.on('data', (data) => {
-      const text = data.toString();
-      if (text.includes('Local') || text.includes('localhost')) {
-        started = true;
-        clearTimeout(timeout);
-        // 等待一秒确保服务器就绪
-        setTimeout(() => resolve(proc), 1000);
+    // 轮询等待服务器就绪
+    const checkServer = async () => {
+      for (let i = 0; i < 30; i++) {
+        try {
+          await fetch('http://localhost:4567/');
+          clearTimeout(timeout);
+          resolve(proc);
+          return;
+        } catch {
+          await new Promise(r => setTimeout(r, 1000));
+        }
       }
-    });
-
-    proc.stderr.on('data', (data) => {
-      // vite 把日志输出到 stderr
-      const text = data.toString();
-      if (text.includes('Local') || text.includes('localhost')) {
-        started = true;
-        clearTimeout(timeout);
-        setTimeout(() => resolve(proc), 1000);
-      }
-    });
+      clearTimeout(timeout);
+      proc.kill();
+      reject(new Error('vite preview 服务器无法连接'));
+    };
 
     proc.on('error', (err) => {
       clearTimeout(timeout);
       reject(err);
     });
+
+    checkServer();
   });
 }
 
@@ -193,6 +190,7 @@ async function main() {
   }
 
   console.log('\n✅ 预渲染完成！Google 现在可以立即索引所有页面内容。\n');
+  process.exit(0);
 }
 
 main().catch(err => {
