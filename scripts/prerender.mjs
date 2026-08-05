@@ -41,7 +41,7 @@ function findChrome() {
   for (const p of CHROME_PATHS) {
     if (existsSync(p)) return p;
   }
-  throw new Error('Chrome not found. Set PUPPETEER_EXECUTABLE_PATH env var or install Chrome.');
+  return null;
 }
 
 function startPreviewServer() {
@@ -139,6 +139,11 @@ async function main() {
   }
 
   const chromePath = findChrome();
+  if (!chromePath) {
+    console.log('  ⚠️  未找到 Chrome，跳过预渲染（SPA 仍可正常工作）');
+    console.log('  提示: 安装 Chrome 或设置 PUPPETEER_EXECUTABLE_PATH 环境变量');
+    process.exit(0);
+  }
   console.log(`  Chrome: ${chromePath}`);
 
   // 启动 vite preview 服务器
