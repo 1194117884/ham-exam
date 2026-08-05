@@ -37,9 +37,19 @@ const CHROME_PATHS = [
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 ].filter(Boolean);
 
-function findChrome() {
+async function findChrome() {
   for (const p of CHROME_PATHS) {
     if (existsSync(p)) return p;
+  }
+  // 尝试使用 @sparticuz/chromium (Vercel/serverless 环境)
+  try {
+    const sparticuzChromium = await import('@sparticuz/chromium');
+    const path = await sparticuzChromium.default.executablePath();
+    if (path) {
+      return { path, isSparticuz: true };
+    }
+  } catch {
+    // @sparticuz/chromium 不可用
   }
   return null;
 }
@@ -138,13 +148,26 @@ async function main() {
     process.exit(1);
   }
 
-  const chromePath = findChrome();
-  if (!chromePath) {
+  const chromeResult = await findChrome();
+  if (!chromeResult) {
     console.log('  ⚠️  未找到 Chrome，跳过预渲染（SPA 仍可正常工作）');
     console.log('  提示: 安装 Chrome 或设置 PUPPETEER_EXECUTABLE_PATH 环境变量');
     process.exit(0);
   }
+
+  const chromePath = typeof chromeResult === 'string' ? chromeResult : chromeResult.path;
   console.log(`  Chrome: ${chromePath}`);
+
+  // puppeteer 启动参数
+  const puppeteerArgs = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+  ];
+  if (typeof chromeResult !== 'string' && chromeResult.isSparticuz) {
+    puppeteerArgs.push('--single-process');
+  }
 
   // 启动 vite preview 服务器
   console.log('  启动 vite preview...');
@@ -155,12 +178,7 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: chromePath,
     headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-    ],
+    args: puppeteerArgs,
   });
 
   try {
