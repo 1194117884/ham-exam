@@ -103,18 +103,18 @@ async function prerenderRoute(browser, baseUrl, route) {
   const page = await browser.newPage();
 
   page.on('pageerror', err => {
-    console.error(`  [${route.path}] JS错误: ${err.message}`);
+    // 静默处理 JS 错误
   });
 
   try {
     const url = `${baseUrl}${route.path}`;
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
     // 等待 React 渲染完成
     await page.waitForFunction(() => {
       const root = document.getElementById('root');
       return root && root.children.length > 0 && root.textContent.trim().length > 50;
-    }, { timeout: 10000 }).catch(() => {
+    }, { timeout: 20000 }).catch(() => {
       console.log(`  ⚠️  ${route.path} 等待渲染超时`);
     });
 
