@@ -3,6 +3,5 @@ node_modules/
 .vscode/
 package-lock.json
 .claude/
-.vercel
 *.zip
 .env
